@@ -127,15 +127,15 @@ def generate_pdf(df, row,Branch_Choice,test_choice,submission_d,semester,no_of_s
         try:
            classesheld = int(df.iloc[row, 8 + i * 4])
         except ValueError:
-            classesheld = 1
+            classesheld = 0
         try:
             classattended = int(df.iloc[row, 9 + i * 4])
         except ValueError:
-            classattended = 1
+            classattended = 0
         try:
             attendance = int(classattended / classesheld * 100)
-        except ValueError:
-            attendance = 1
+        except :
+            attendance = 0
         marks = df.iloc[row, 10 + i * 4]
         assignment = df.iloc[row, 11 + i * 4]
         wrapped_subject = textwrap.fill(subject, width=30)
@@ -377,25 +377,19 @@ def progress_pdf(Branch_Choice):
 
 
 
-def final_progresspdf(username):
-
-    if username == 'isedept':
-        Branch_Choice = 'INFORMATION SCIENCE & ENGINEERING'
-    elif username == 'csedept':
-        Branch_Choice = 'COMPUTER SCIENCE & ENGINEERING'
-    elif username == 'ecedept':
-        Branch_Choice = 'ELECTRONICS & COMMUNICATION ENGINEERING'
-    elif username == 'medept' :
-        Branch_Choice = 'MECHANICAL ENGINEERING'
+def final_progresspdf():
 
     
-    if username == 'isedept' or username == 'csedept' or username == 'ecedept' or username == 'medept':
+            Branch_Choice = 'INFORMATION SCIENCE & ENGINEERING'
+
+
+    
+
             st.markdown("<div style='text-align:center;'><h2> </h2></div>", unsafe_allow_html=True,)
             st.markdown("<div style='text-align:center;'><h3> 📑 PROGRESS REPORT GENERATOR </h3></div>", unsafe_allow_html=True,)
             st.markdown("<div style='text-align:center;'><h1> </h1></div>", unsafe_allow_html=True,)
             progress_pdf(Branch_Choice)
-    else:
-            st.info('Please Logout of Student account to continue!')
+
     
    
     
@@ -407,16 +401,9 @@ def progress_report():
 
 
 
-        taab1, taab2 = st.tabs(["\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0Progress Report Generator\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0","\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0Result Analysis Database\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"])
+   
+          final_progresspdf()
         
-        with taab1:
-          final_progresspdf(username)
-        
-        with taab2:
-            st.markdown("<div style='text-align:center;'><h2> </h2></div>", unsafe_allow_html=True,)
-            st.markdown("<div style='text-align:center;'><h3> 📊 RESULT ANALYSIS DATABASE </h3></div>", unsafe_allow_html=True,)
-            st.markdown("<div style='text-align:center;'><h1> </h1></div>", unsafe_allow_html=True,)
-            excel_update(username)
 
 
 progress_report()
