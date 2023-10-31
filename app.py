@@ -135,7 +135,9 @@ def generate_pdf(df, row,Branch_Choice,test_choice,submission_d,semester,no_of_s
     
         # Check if both classesheld and classattended are zero
         if classesheld == 0 and classattended == 0:
-            attendance = "-"
+            classesheld = '-'
+            classattended = '-'
+            attendance = '-'
         else:
             try:
                 attendance = int(classattended / classesheld * 100)
