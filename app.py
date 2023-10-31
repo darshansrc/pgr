@@ -249,7 +249,7 @@ def progress_pdf():
         
     
     semester = st.selectbox("Select the Semester: ",[" I Semester BE  "," II Semester BE  ", " III Semester BE  "," IV Semester BE ", "V Semester BE", "VI Semester BE","VII Semester BE","VII Semester BE"])   
-    no_of_subjects = st.selectbox("Select the no of Subjects: ",[6,7,8,9,5,4,3,2,1])   
+    no_of_subjects = st.selectbox("Select the no of Subjects: ",[1,2,3,4,5,6,7,8,9,10,11])   
     note = st.text_area("General Note (If any*):",placeholder="example: Attendace considered up till 17th March 2023")
 
 
