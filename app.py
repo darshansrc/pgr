@@ -73,8 +73,8 @@ def generate_pdf(df, row,Branch_Choice,test_choice,submission_d,semester,no_of_s
 
     elements = [] 
 
-    image_path = "Header_RV.png"
-    image = Image(image_path, width=8*inch, height=1.6445*inch)
+    header_path = "Images/Header_RV.png"
+    image = Image(header_path, width=8*inch, height=1.6445*inch)
     image.vAlign = "TOP"
     elements.append(image)
 
@@ -192,7 +192,17 @@ def generate_pdf(df, row,Branch_Choice,test_choice,submission_d,semester,no_of_s
     para = Paragraph(text, style)
     elements.append(para)
 
-    image_path = "RV_Signature.png"
+    image_path = "Images/default.png"
+
+    # Use if-else statements to set image_path based on the selected branch
+    if Branch_Choice == "COMPUTER SCIENCE & ENGINEERING":
+        image_path = "Images/CSE_Signature.png"
+    elif Branch_Choice == "INFORMATION SCIENCE & ENGINEERING":
+        image_path = "Images/ISE_Signature.png"
+    elif Branch_Choice == "ELECTRONICS & COMMUNICATION ENGINEERING":
+        image_path = "Images/ECE_Signature.png"
+    elif Branch_Choice == "MECHANICAL ENGINEERING":
+        image_path = "Images/ME_Signature.png"
     image = Image(image_path, width=7*inch, height=1.4155*inch)
     elements.append(image)
 
@@ -210,7 +220,7 @@ def generate_pdf(df, row,Branch_Choice,test_choice,submission_d,semester,no_of_s
 
     style_sheet = getSampleStyleSheet()
     style = style_sheet['Normal']
-    text = "This report was auto-generated through RVITM E-Campus"
+    text = "This report was auto-generated through EDUSTACK RVITM"
     para = Paragraph(text, style)
     elements.append(para)
 
@@ -219,9 +229,13 @@ def generate_pdf(df, row,Branch_Choice,test_choice,submission_d,semester,no_of_s
     buffer.seek(0)
     return buffer
 
-def progress_pdf(Branch_Choice):
+def progress_pdf():
 
-   
+    st.markdown("<div style='text-align:center;'><h2> </h2></div>", unsafe_allow_html=True,)
+    st.markdown("<div style='text-align:center;'><h3> 📑 PROGRESS REPORT GENERATOR </h3></div>", unsafe_allow_html=True,)
+    st.markdown("<div style='text-align:center;'><h1> </h1></div>", unsafe_allow_html=True,)
+
+    Branch_Choice = st.selectbox("Choose Branch: ",["COMPUTER SCIENCE & ENGINEERING","INFORMATION SCIENCE & ENGINEERING","ELECTRONICS & COMMUNICATION ENGINEERING", "MECHANICAL ENGINEERING"])
 
     test_choice = st.selectbox("Choose the test: ",["PROGRESS REPORT-I","PROGRESS REPORT-II","PROGRESS REPORT-III"])   
 
@@ -234,7 +248,7 @@ def progress_pdf(Branch_Choice):
 
         
     
-    semester = st.selectbox("Select the Semester: ",[" I Semester BE ( ISE ) "," II Semester BE ( ISE ) ", " III Semester BE ( ISE ) "," IV Semester BE ( ISE )", "V Semester BE ( ISE )", "VI Semester BE ( ISE )","VII Semester BE ( ISE )","VII Semester BE ( ISE )"])   
+    semester = st.selectbox("Select the Semester: ",[" I Semester BE  "," II Semester BE  ", " III Semester BE  "," IV Semester BE ", "V Semester BE", "VI Semester BE","VII Semester BE","VII Semester BE"])   
     no_of_subjects = st.selectbox("Select the no of Subjects: ",[6,7,8,9,5,4,3,2,1])   
     note = st.text_area("General Note (If any*):",placeholder="example: Attendace considered up till 17th March 2023")
 
@@ -244,77 +258,75 @@ def progress_pdf(Branch_Choice):
 
     
     if uploaded_file is not None:
-      tab1, tab2, tab3 = st.tabs(["Generate & Download Report","Preview Progress Report" ,"Confirm & Send Email"])
+      tab1, tab3 = st.tabs(["Generate & Download Report" ,"Confirm & Send Email"])
       with tab1:
         df = pd.read_excel(uploaded_file)
+ 
+    
 
-
-        download_choice = st.selectbox("Choose how you want to download the report:", ["Download all Student's pdf in ZIP format","Download report Individually"])
-        
-        if download_choice == "Download all Student's pdf in ZIP format":
-            progress_bar = st.progress(0, text = 'Generating Report')
-            zip_buffer = BytesIO()
-            with zipfile.ZipFile(zip_buffer, "w") as zip_file:
-                for i in range(2, df.shape[0]):
-                    buffer = generate_pdf(df, i, Branch_Choice, test_choice, submission_d, semester, no_of_subjects, note)
-                    file_name = f"{df.iloc[i, 1]}.pdf"
-                    zip_file.writestr(file_name, buffer.getvalue())
-            
-                    progress_value = int((i - 1) / (df.shape[0] - 2) * 100)
-                    progress_bar.progress(progress_value, text = 'Generating Report')
-            
-            # Generate a download link for the zip file
-            zip_name = ""+test_choice+"."+semester+".zip"
-            b64 = base64.b64encode(zip_buffer.getvalue()).decode()
-            download_link = f'<a href="data:application/zip;base64,{b64}" download="{zip_name}">click here to begin download</a>'
-            st.markdown(download_link, unsafe_allow_html=True)
-
-        if download_choice == "Download report Individually":
-            st.write("Generating Progress Report...")
-            progress_bar = st.progress(0)
-            
-            for i in range(2,df.shape[0]):
-                buffer = generate_pdf(df, i,Branch_Choice,test_choice,no_of_subjects,note)
+        progress_bar = st.progress(0, text = 'Generating Report')
+        zip_buffer = BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zip_file:
+            for i in range(2, df.shape[0]):
+                buffer = generate_pdf(df, i, Branch_Choice, test_choice, submission_d, semester, no_of_subjects, note)
                 file_name = f"{df.iloc[i, 1]}.pdf"
+                zip_file.writestr(file_name, buffer.getvalue())
+        
+                progress_value = int((i - 1) / (df.shape[0] - 2) * 100)
+                progress_bar.progress(progress_value, text = 'Generating Report')
+        
+        # Generate a download link for the zip file
+        zip_name = ""+test_choice+"."+semester+".zip"
+        b64 = base64.b64encode(zip_buffer.getvalue()).decode()
+        download_link = f'<a href="data:application/zip;base64,{b64}" download="{zip_name}">click here to begin download</a>'
+        st.markdown(download_link, unsafe_allow_html=True)
+
+        # if download_choice == "Download report Individually":
+        #     st.write("Generating Progress Report...")
+        #     progress_bar = st.progress(0)
+            
+        #     for i in range(2,df.shape[0]):
+        #         buffer = generate_pdf(df, i,Branch_Choice,test_choice,no_of_subjects,note)
+        #         file_name = f"{df.iloc[i, 1]}.pdf"
     
             
-                b64 = base64.b64encode(buffer.getvalue()).decode()
-                download_link = f'<a href="data:application/zip;base64,{b64}" download="{file_name}">Download {file_name}</a>'
-                st.markdown(download_link, unsafe_allow_html=True)
+        #         b64 = base64.b64encode(buffer.getvalue()).decode()
+        #         download_link = f'<a href="data:application/zip;base64,{b64}" download="{file_name}">Download {file_name}</a>'
+        #         st.markdown(download_link, unsafe_allow_html=True)
                     
-                progress_value = int((i - 1) / (df.shape[0] - 2) * 100)
-                progress_bar.progress(progress_value)
+        #         progress_value = int((i - 1) / (df.shape[0] - 2) * 100)
+        #         progress_bar.progress(progress_value)
         
-      with tab2:
+    #   with tab2:
       
-        df = pd.read_excel(uploaded_file)
-        st.write("Generating Preview of Progress Report...")
+    #     df = pd.read_excel(uploaded_file)
+    #     st.write("Generating Preview of Progress Report...")
         
-        # Show a progress bar while the PDFs are being generated
-        progress_bar = st.progress(0)
+    #     # Show a progress bar while the PDFs are being generated
+    #     progress_bar = st.progress(0)
         
-        # Generate the PDFs for each student and store it in a dictionary with the student name as the key
-        pdfs = {}
-        for i in range(2, df.shape[0]):
-            buffer = generate_pdf(df, i, Branch_Choice, test_choice, submission_d,semester,no_of_subjects,note)
-            file_name = f"{df.iloc[i, 1]}.pdf"
+    #     # Generate the PDFs for each student and store it in a dictionary with the student name as the key
+    #     pdfs = {}
+    #     for i in range(2, df.shape[0]):
+    #         buffer = generate_pdf(df, i, Branch_Choice, test_choice, submission_d,semester,no_of_subjects,note)
+    #         file_name = f"{df.iloc[i, 1]}.pdf"
          
-            b64 = base64.b64encode(buffer.getvalue()).decode()
-            pdfs[file_name] = b64
+    #         b64 = base64.b64encode(buffer.getvalue()).decode()
+    #         pdfs[file_name] = b64
             
-            progress_value = int((i - 1) / (df.shape[0] - 2) * 100)
-            progress_bar.progress(progress_value)
+    #         progress_value = int((i - 1) / (df.shape[0] - 2) * 100)
+    #         progress_bar.progress(progress_value)
         
-        # Show a selectbox to select the PDF to preview
-        selected_pdf = st.selectbox("Select a student", list(pdfs.keys()))
-        if selected_pdf is not None:
-            b64 = pdfs[selected_pdf]
-            st.write("""
-            <iframe
-                src="data:application/pdf;base64,{b64}"
-                style="border: none; width: 100%; height: 970px;"
-            ></iframe>
-            """.format(b64=b64), unsafe_allow_html=True)
+    #     # Show a selectbox to select the PDF to preview
+    #     selected_pdf = st.selectbox("Select a student", list(pdfs.keys()))
+    #     if selected_pdf is not None:
+    #         b64 = pdfs[selected_pdf]
+    #         st.write("""
+    #         <iframe
+    #             src="data:application/pdf;base64,{b64}"
+    #             style="border: none; width: 100%; height: 970px;"
+    #         ></iframe>
+    #         """.format(b64=b64), unsafe_allow_html=True)
 
       with tab3:
 
@@ -377,33 +389,25 @@ def progress_pdf(Branch_Choice):
 
 
 
-def final_progresspdf():
 
-    
-            Branch_Choice = 'COMPUTER SCIENCE & ENGINEERING'
+def app():
+#    with st.sidebar:
+#       st.write('welcome')
+   progress_pdf()
 
 
-    
-
-            st.markdown("<div style='text-align:center;'><h2> </h2></div>", unsafe_allow_html=True,)
-            st.markdown("<div style='text-align:center;'><h3> 📑 PROGRESS REPORT GENERATOR </h3></div>", unsafe_allow_html=True,)
-            st.markdown("<div style='text-align:center;'><h1> </h1></div>", unsafe_allow_html=True,)
-            progress_pdf(Branch_Choice)
-
+app()
     
    
     
 
 
         
-def progress_report():
+
     
 
 
 
    
-          final_progresspdf()
+
         
-
-
-progress_report()
