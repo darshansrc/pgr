@@ -125,22 +125,28 @@ def generate_pdf(df, row,Branch_Choice,test_choice,submission_d,semester,no_of_s
     for i in range(no_of_subjects):
         subject = df.iloc[0, 8 + i * 4]
         try:
-           classesheld = int(df.iloc[row, 8 + i * 4])
+            classesheld = int(df.iloc[row, 8 + i * 4])
         except ValueError:
             classesheld = 0
         try:
             classattended = int(df.iloc[row, 9 + i * 4])
         except ValueError:
             classattended = 0
-        try:
-            attendance = int(classattended / classesheld * 100)
-        except :
-            attendance = 0
+    
+        # Check if both classesheld and classattended are zero
+        if classesheld == 0 and classattended == 0:
+            attendance = "-"
+        else:
+            try:
+                attendance = int(classattended / classesheld * 100)
+            except ZeroDivisionError:
+                attendance = 0
+    
         marks = df.iloc[row, 10 + i * 4]
         assignment = df.iloc[row, 11 + i * 4]
         wrapped_subject = textwrap.fill(subject, width=30)
-
-        data.append([str(i+1), wrapped_subject, classesheld, classattended, "{}%".format(attendance), marks, assignment])
+    
+        data.append([str(i + 1), wrapped_subject, classesheld, classattended, "{}%".format(attendance), marks, assignment])
 
     table = Table(data, splitByRow=1, spaceBefore=10, spaceAfter=10, cornerRadii=[1.5,1.5,1.5,1.5])
     
