@@ -380,7 +380,7 @@ def progress_pdf(Branch_Choice):
 def final_progresspdf():
 
     
-            Branch_Choice = 'INFORMATION SCIENCE & ENGINEERING'
+            Branch_Choice = 'COMPUTER SCIENCE & ENGINEERING'
 
 
     
