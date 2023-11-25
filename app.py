@@ -266,7 +266,7 @@ def progress_pdf():
 
     
     if uploaded_file is not None:
-      tab1, tab3 = st.tabs(["Generate & Download Report" ,"Confirm & Send Email"])
+      tab1,tab2, tab3 = st.tabs(["Generate & Download Report", 'Preview Report' ,"Confirm & Send Email"])
       with tab1:
         df = pd.read_excel(uploaded_file)
  
@@ -305,36 +305,36 @@ def progress_pdf():
         #         progress_value = int((i - 1) / (df.shape[0] - 2) * 100)
         #         progress_bar.progress(progress_value)
         
-    #   with tab2:
+      with tab2:
       
-    #     df = pd.read_excel(uploaded_file)
-    #     st.write("Generating Preview of Progress Report...")
+        df = pd.read_excel(uploaded_file)
+        st.write("Generating Preview of Progress Report...")
         
-    #     # Show a progress bar while the PDFs are being generated
-    #     progress_bar = st.progress(0)
+        # Show a progress bar while the PDFs are being generated
+        progress_bar = st.progress(0)
         
-    #     # Generate the PDFs for each student and store it in a dictionary with the student name as the key
-    #     pdfs = {}
-    #     for i in range(2, df.shape[0]):
-    #         buffer = generate_pdf(df, i, Branch_Choice, test_choice, submission_d,semester,no_of_subjects,note)
-    #         file_name = f"{df.iloc[i, 1]}.pdf"
+        # Generate the PDFs for each student and store it in a dictionary with the student name as the key
+        pdfs = {}
+        for i in range(2, df.shape[0]):
+            buffer = generate_pdf(df, i, Branch_Choice, test_choice, submission_d,semester,no_of_subjects,note)
+            file_name = f"{df.iloc[i, 1]}.pdf"
          
-    #         b64 = base64.b64encode(buffer.getvalue()).decode()
-    #         pdfs[file_name] = b64
+            b64 = base64.b64encode(buffer.getvalue()).decode()
+            pdfs[file_name] = b64
             
-    #         progress_value = int((i - 1) / (df.shape[0] - 2) * 100)
-    #         progress_bar.progress(progress_value)
+            progress_value = int((i - 1) / (df.shape[0] - 2) * 100)
+            progress_bar.progress(progress_value)
         
-    #     # Show a selectbox to select the PDF to preview
-    #     selected_pdf = st.selectbox("Select a student", list(pdfs.keys()))
-    #     if selected_pdf is not None:
-    #         b64 = pdfs[selected_pdf]
-    #         st.write("""
-    #         <iframe
-    #             src="data:application/pdf;base64,{b64}"
-    #             style="border: none; width: 100%; height: 970px;"
-    #         ></iframe>
-    #         """.format(b64=b64), unsafe_allow_html=True)
+        # Show a selectbox to select the PDF to preview
+        selected_pdf = st.selectbox("Select a student", list(pdfs.keys()))
+        if selected_pdf is not None:
+            b64 = pdfs[selected_pdf]
+            st.write("""
+            <iframe
+                src="data:application/pdf;base64,{b64}"
+                style="border: none; width: 100%; height: 970px;"
+            ></iframe>
+            """.format(b64=b64), unsafe_allow_html=True)
 
       with tab3:
 
