@@ -120,16 +120,19 @@ def generate_pdf(df, row,Branch_Choice,test_choice,submission_d,semester,no_of_s
     wrapped_classattended = textwrap.fill("Classes Attended", width=9)
     wrapped_testmarks = textwrap.fill(str(df.iloc[1,10]), width=10)
     wrapped_assignment = textwrap.fill(str(df.iloc[1,11]), width=10)
-    data = [[wrapped_sl,"Subject Name",wrapped_classheld,wrapped_classattended,wrapped_attendance,wrapped_testmarks,wrapped_assignment]]
+    wrapped_finalmarks = textwrap.fill(str(df.iloc[1,12]),width=10)
+    data = [
+    [wrapped_sl, "Subject Name", wrapped_classheld, wrapped_classattended, wrapped_attendance, wrapped_testmarks, wrapped_assignment, wrapped_finalmarks]
+]
 
     for i in range(no_of_subjects):
-        subject = df.iloc[0, 8 + i * 4]
+        subject = df.iloc[0, 8 + i * 5]
         try:
-            classesheld = int(df.iloc[row, 8 + i * 4])
+            classesheld = int(df.iloc[row, 8 + i * 5])
         except ValueError:
             classesheld = 0
         try:
-            classattended = int(df.iloc[row, 9 + i * 4])
+            classattended = int(df.iloc[row, 9 + i * 5])
         except ValueError:
             classattended = 0
     
@@ -144,28 +147,30 @@ def generate_pdf(df, row,Branch_Choice,test_choice,submission_d,semester,no_of_s
             except ZeroDivisionError:
                 attendance = 0
     
-        marks = df.iloc[row, 10 + i * 4]
-        assignment = df.iloc[row, 11 + i * 4]
+        marks = df.iloc[row, 10 + i * 5]
+        assignment = df.iloc[row, 11 + i * 5]
+        new_column_value = df.iloc[row, 12 + i * 5]  # Adjust this index based on your Excel data
         wrapped_subject = textwrap.fill(subject, width=30)
     
-        data.append([str(i + 1), wrapped_subject, classesheld, classattended, "{}%".format(attendance), marks, assignment])
+        data.append([str(i + 1), wrapped_subject, classesheld, classattended, "{}%".format(attendance), marks, assignment, new_column_value])
 
-    table = Table(data, splitByRow=1, spaceBefore=10, spaceAfter=10, cornerRadii=[1.5,1.5,1.5,1.5])
+
+    table = Table(data, splitByRow=1, spaceBefore=10, spaceAfter=10, cornerRadii=[1.5, 1.5, 1.5, 1.5])
     
 
-    table.setStyle(TableStyle([      
-    
+    table.setStyle(TableStyle([
+    # ...
     ('BACKGROUND', (0, 0), (-1, 0), '#FFFFFF'),
     ('TEXTCOLOR', (0, 0), (-1, 0), '#000000'),
     ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-    ('fontsize', (-1,-1), (-1,-1), 14),
+    ('fontsize', (-1, -1), (-1, -1), 14),
     ('ALIGNMENT', (1, 1), (1, -1), 'LEFT'),
     ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
     ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
     ('BOTTOMPADDING', (0, 1), (-1, -1), 5),
     ('BACKGROUND', (0, 1), (-1, -1), '#FFFFFF'),
     ('GRID', (0, 0), (-1, -1), 1, "black")
-  ]))
+]))
 
     elements.append(table)
 
@@ -240,7 +245,7 @@ def generate_pdf(df, row,Branch_Choice,test_choice,submission_d,semester,no_of_s
 def progress_pdf():
 
     st.markdown("<div style='text-align:center;'><h2> </h2></div>", unsafe_allow_html=True,)
-    st.markdown("<div style='text-align:center;'><h3> 📑 PROGRESS REPORT GENERATOR </h3></div>", unsafe_allow_html=True,)
+    st.markdown("<div style='text-align:center;'><h3> 📑 FINAL CIE PROGRESS REPORT GENERATOR </h3></div>", unsafe_allow_html=True,)
     st.markdown("<div style='text-align:center;'><h1> </h1></div>", unsafe_allow_html=True,)
 
     Branch_Choice = st.selectbox("Choose Branch: ",["COMPUTER SCIENCE & ENGINEERING","INFORMATION SCIENCE & ENGINEERING","ELECTRONICS & COMMUNICATION ENGINEERING", "MECHANICAL ENGINEERING"])
@@ -283,27 +288,11 @@ def progress_pdf():
                 progress_value = int((i - 1) / (df.shape[0] - 2) * 100)
                 progress_bar.progress(progress_value, text = 'Generating Report')
         
-        # Generate a download link for the zip file
+        
         zip_name = ""+test_choice+"."+semester+".zip"
         b64 = base64.b64encode(zip_buffer.getvalue()).decode()
         download_link = f'<a href="data:application/zip;base64,{b64}" download="{zip_name}">click here to begin download</a>'
         st.markdown(download_link, unsafe_allow_html=True)
-
-        # if download_choice == "Download report Individually":
-        #     st.write("Generating Progress Report...")
-        #     progress_bar = st.progress(0)
-            
-        #     for i in range(2,df.shape[0]):
-        #         buffer = generate_pdf(df, i,Branch_Choice,test_choice,no_of_subjects,note)
-        #         file_name = f"{df.iloc[i, 1]}.pdf"
-    
-            
-        #         b64 = base64.b64encode(buffer.getvalue()).decode()
-        #         download_link = f'<a href="data:application/zip;base64,{b64}" download="{file_name}">Download {file_name}</a>'
-        #         st.markdown(download_link, unsafe_allow_html=True)
-                    
-        #         progress_value = int((i - 1) / (df.shape[0] - 2) * 100)
-        #         progress_bar.progress(progress_value)
         
       with tab2:
       
@@ -395,27 +384,4 @@ def progress_pdf():
         st.success("All Progress Reports sent successfully")
 
 
-
-
-
-def app():
-#    with st.sidebar:
-#       st.write('welcome')
-   progress_pdf()
-
-
-app()
-    
-   
-    
-
-
-        
-
-    
-
-
-
-   
-
-        
+progress_pdf()
