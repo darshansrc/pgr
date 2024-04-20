@@ -211,6 +211,8 @@ def generate_pdf(df, row,Branch_Choice,test_choice,submission_d,semester,no_of_s
         image_path = "Images/ECE_Signature.png"
     elif Branch_Choice == "MECHANICAL ENGINEERING":
         image_path = "Images/ME_Signature.png"
+    elif Branch_Choice == "MASTER OF COMPUTER APPLICATIONS":
+        image_path = "Images/MCA_Signature.png"
     image = Image(image_path, width=7*inch, height=1.4155*inch)
     elements.append(image)
 
@@ -243,7 +245,7 @@ def progress_pdf():
     st.markdown("<div style='text-align:center;'><h3> 📑 PROGRESS REPORT GENERATOR </h3></div>", unsafe_allow_html=True,)
     st.markdown("<div style='text-align:center;'><h1> </h1></div>", unsafe_allow_html=True,)
 
-    Branch_Choice = st.selectbox("Choose Branch: ",["COMPUTER SCIENCE & ENGINEERING","INFORMATION SCIENCE & ENGINEERING","ELECTRONICS & COMMUNICATION ENGINEERING", "MECHANICAL ENGINEERING"])
+    Branch_Choice = st.selectbox("Choose Branch: ",["COMPUTER SCIENCE & ENGINEERING","INFORMATION SCIENCE & ENGINEERING","ELECTRONICS & COMMUNICATION ENGINEERING", "MECHANICAL ENGINEERING","MASTER OF COMPUTER APPLICATIONS"])
 
     test_choice = st.selectbox("Choose the test: ",["PROGRESS REPORT-I","PROGRESS REPORT-II","PROGRESS REPORT-III"])   
 
