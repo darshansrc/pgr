@@ -397,17 +397,10 @@ def progress_pdf():
         st.success("All Progress Reports sent successfully")
 
 
+progress_pdf()
 
 
 
-def app():
-#    with st.sidebar:
-#       st.write('welcome')
-   progress_pdf()
-
-
-app()
-    
    
     
 
